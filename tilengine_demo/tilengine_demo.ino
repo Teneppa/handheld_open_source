@@ -81,7 +81,7 @@ void tilengine::draw(uint16_t * xpos, uint16_t * ypos, uint8_t * drawFlag, uint8
           You can find the discord group from this link: https://discord.gg/mTT559R
       */
       if(((map1[drawYCursor] & (1<<drawXCursor))>>drawXCursor)) { // Check if there is a bitmap to draw on this tile
-        *xpos = uint16_t(drawXCursor*8);  // Get the coordinates for the bitmap
+        *xpos = uint16_t((width-1)*8-drawXCursor*8);  // Get the coordinates for the bitmap
         *ypos = uint16_t(drawYCursor*8);
         *drawFlag = 1;                    // Set the draw flag to 1
       }else{
