@@ -27,6 +27,8 @@ const unsigned char PROGMEM mushroom [] = {
 
 /**************************-= TILENGINE=-***************************************/
 
+
+/*****-= map =-********/
 const uint16_t map1[8] {
   0b1111111111111111,
   0b1000000000000001,
@@ -46,16 +48,16 @@ struct tilengine {
 
   void copyBuffer(uint16_t * bufferToCopy);    // Copy a buffer to the tilebuffer
 
-  String returnConfig();
+  String returnConfig();  // Just some configuration integers for debugging
 
   uint16_t tilecount = 0; // Sum of the tiles
   uint8_t width = 0;      // Tiles in x-direction
   uint8_t height = 0;     // Tiles in y-direction
 
-  void draw(uint16_t * xpos, uint16_t * ypos, uint8_t * drawFlag, uint8_t * clearFlag);
+  void draw(uint16_t * xpos, uint16_t * ypos, uint8_t * drawFlag, uint8_t * clearFlag);   // This is the function that draws the entire tilemap
   
   private:
-    uint16_t drawXCursor = 0;
+    uint16_t drawXCursor = 0;   // Cursor coordinates for the tiles
     uint16_t drawYCursor = 0;
     
 };
@@ -100,10 +102,12 @@ void tilengine::draw(uint16_t * xpos, uint16_t * ypos, uint8_t * drawFlag, uint8
       }
 }
 
+/* This function moves a buffer to the tile-engines buffer */
 void tilengine::copyBuffer(uint16_t * bufferToCopy) {
   memcpy(puskuri, bufferToCopy, sizeof(uint16_t)*width*height/16);
 }
 
+/* Just a debugging function */
 String tilengine::returnConfig() {
   String str = "";
 
@@ -117,35 +121,34 @@ String tilengine::returnConfig() {
 
 //#include "tilengine.h"
 
-tilengine engine(16, 8);
+tilengine engine(16, 8);  // Create an engine object with width of 16 and height of 8
 
 void setup() {
-  Serial.begin(115200);
+  //Serial.begin(115200);
   
-  beginDisplay();
+  beginDisplay();     // Configure the OLED
 
-  oled.clearDisplay();
-  oled.display();
+  oled.clearDisplay();    // Clear the buffer
+  oled.display();         // Push the clear buffer to the screen
 
-  engine.copyBuffer(map1);
+  engine.copyBuffer(map1);   // Copy the map to the tile-engine's buffer
 
-  Serial.println(engine.returnConfig());
-
-  //delay(2000);
+  //Serial.println(engine.returnConfig());
 }
 
 void loop() {
-  uint16_t tilex, tiley;
-  uint8_t drawFlag = 0;
-  uint8_t clearFlag = 0;
+  uint16_t tilex, tiley;    // Coordinates for the bitmaps
+  uint8_t drawFlag = 0;     // If 1, you need to draw a bitmap to (tilex, tiley) on the display
+  uint8_t clearFlag = 0;    // If 1, you need to draw everything and then clear the display
   
   engine.draw(&tilex, &tiley, &drawFlag, &clearFlag);
 
-  //Serial.println("tilex: "+String(tilex)+"\ntiley:"+String(tiley)+"\ndrawFlag: "+String(drawFlag)+"\nclearFlag: "+String(clearFlag)+"\n");
-
+  // Draw a bitmap
   if(drawFlag == 1) {
     oled.drawBitmap(tilex, tiley, block, 8, 8, 1);
   }
+
+  // Push the buffer to the display and clear it
   if(clearFlag == 1) {
     oled.display();
     oled.clearDisplay();
