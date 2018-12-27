@@ -4,3 +4,6 @@ This is a simple handheld that uses ATmega328P as the processor. I wanted to cre
 
 You can find the PCB from here (public EasyEDA project):
 https://easyeda.com/laurilateemu8/k-sikonsoli-oled
+
+More info in my blog (in Finnish):
+https://teukka.webnode.com/l/avoimen-lahdekoodin-kasikonsoli-ja-pelimoottori/
